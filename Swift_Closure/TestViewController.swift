@@ -18,6 +18,7 @@ class TestViewController: UIViewController {
         super.viewDidLoad()
         //
 //        retainCycle()
+        compareRetainCycle()
 //        testAutomaticClosure()   // 下面这个没有 retainCycle
 //        testClosureCaptureBasicType()
 //        testClosureCaptureObjectType()
@@ -25,7 +26,7 @@ class TestViewController: UIViewController {
 //        testRetainCycleInClosure()
 //        testRetainCycleInClosureTwo()
 //        testRetainCycleInClosureThree()
-        testRetainCycleInClosureFour()
+//        testRetainCycleInClosureFour()
         
 //        testNoneEscapingClosureInEscapingCondition {
 //            print("这是 闭包的内容 -----")
@@ -38,14 +39,28 @@ class TestViewController: UIViewController {
     var completionHandlers:[()->Void] = []
     // 逃逸
     func someFunctionWithEscapingClosure(completionHandler: @escaping ()->Void)  {
-        completionHandlers.append(completionHandler)
+        // 关键是 completionHandlers 添加了这个 Closure 的原因导致 循环引用
+        completionHandlers.append {
+            completionHandler()
+        }
     }
     
     // 这里 有内存泄漏 
     func retainCycle()  {
         // 产生了内存泄漏 如果这样调用
         someFunctionWithEscapingClosure {
-            self.x = 100;
+            self.x = 100
+        }
+    }
+    
+    func compareSomeFunctionWithEscapingClosure(completionHandler:  ()->Void)  {
+        // 无循环引用 和 clsosure 是否加escaping没有关系
+        completionHandler()
+    }
+    
+    func compareRetainCycle()  {
+        compareSomeFunctionWithEscapingClosure {
+            self.x = 100
         }
     }
     
