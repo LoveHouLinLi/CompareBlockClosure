@@ -78,9 +78,9 @@ block  在 ARC 上默认是在堆上面
     
     int  i=arc4random()%2;
     if (i==0) {
-        block=^{
+        block=[^{
             NSLog(@" Block A i is %d",i);
-        };
+        } copy];
     }else{
         block=^{
             NSLog(@"Block B i is %d",i);
