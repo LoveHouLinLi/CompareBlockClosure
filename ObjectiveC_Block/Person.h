@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^block)(void);
+
 @interface Person : NSObject
 
 - (instancetype)initWithName:(NSString *)name;
 
 @property (nonatomic,copy)NSString *name;
+
+@property (nonatomic,copy)block block2;
 
 @end

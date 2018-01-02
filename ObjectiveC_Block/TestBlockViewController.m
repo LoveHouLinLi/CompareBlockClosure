@@ -21,9 +21,18 @@ typedef int(^Block3)(void);
 
 @property (nonatomic,strong)NSMutableArray *array;
 
+
+/**
+ Person 类
+ */
+@property (nonatomic,strong)Person *person;
+
 @end
 
 @implementation TestBlockViewController
+{
+    void (^block)(void);
+}
 
 - (void)viewDidLoad
 {
@@ -34,6 +43,16 @@ typedef int(^Block3)(void);
     [self testBlockCapturePoint];
     [self testModifyCapturePoint];
     [self createBlockArray];
+    
+//    [self testCycleFour];
+    [self testCycleOne];
+    
+    // 下面代码会引起循环引用
+//    block = ^{
+//        NSLog(@"rect is %@",NSStringFromCGRect(self.view.frame));
+//    };
+//    block();
+//    
     
 }
 
@@ -116,6 +135,28 @@ typedef int(^Block3)(void);
     // 打印结果是："person name = (null)"
     // 试试 如果去掉 __block  打印结果是：person name = zxy
 }
+
+- (void)testCycleFour
+{
+    //
+    self.person = [[Person alloc] initWithName:@"name"];
+    void (^block)(void) = ^(){
+       NSLog(@"rect is %@",NSStringFromCGRect(self.view.frame));
+    };
+    
+    self.person.block2 = block;
+}
+
+- (void)testCycleOne
+{
+    Person *a = [[Person alloc] initWithName:@"name"];
+    void (^block)(void) = ^(){
+        NSLog(@"rect is %@",NSStringFromCGRect(self.view.frame));
+    };
+    
+     a.block2 = block;
+}
+
 
 #pragma mark ----  测试添加Block 在Array 里面
 - (void)createBlockArray

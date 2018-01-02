@@ -208,16 +208,16 @@ class ViewController: UIViewController {
         print("do Something Function Body")
     }
     
-    func doSomethingDelayWithNoneEscaping(some:()->Void) {
-        // 这种会有类似的提醒 编译器  提醒加 escaping
-        // Closure use of non-escaping parameter 'some' may allow it to escape
+//    func doSomethingDelayWithNoneEscaping(some:()->Void) {
+//        // 这种会有类似的提醒 编译器  提醒加 escaping
+//        // Closure use of non-escaping parameter 'some' may allow it to escape
 //        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
 //            some()
 //        }
-//      IDE 编译优化  这种显式的我们能避免  我们在 TestViewController
-        some()
-        print("do Something Function Body")
-    }
+////      IDE 编译优化  这种显式的我们能避免  我们在 TestViewController
+//        some()
+//        print("do Something Function Body")
+//    }
     
     var completionHandler:()->String = {
         "DeLongYang"

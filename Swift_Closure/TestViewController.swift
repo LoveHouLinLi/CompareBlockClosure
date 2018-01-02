@@ -25,10 +25,11 @@ class TestViewController: UIViewController {
 //        testRetainCycleInClosure()
 //        testRetainCycleInClosureTwo()
 //        testRetainCycleInClosureThree()
-//        testRetainCycleInClosureFour()
-        testNoneEscapingClosureInEscapingCondition {
-            print("这是 闭包的内容 -----")
-        }
+        testRetainCycleInClosureFour()
+        
+//        testNoneEscapingClosureInEscapingCondition {
+//            print("这是 闭包的内容 -----")
+//        }
         //
         
     }
@@ -90,6 +91,8 @@ class TestViewController: UIViewController {
     
     // 捕获 Object 对象
     func testClosureCaptureObjectType() {
+        
+        // 没有循环引用
         var block2:()->()?
         var a:Person? = Person()
         block2 = {
@@ -123,6 +126,7 @@ class TestViewController: UIViewController {
      这是因为我们忽略了可选类型这个因素。这里的a不是A类型的对象，而是一个可选类型变量，其内部封装了A的实例对象。闭包截获的是可选类型变量a，当你执行a = nil时，并不是释放了变量a，而是释放了a中包含的A类型实例对象。所以A的deinit方法会执行，当你调用block时，由于使用了可选链，就会得到nil，如果使用强制解封，程序就会崩溃。
      */
     func testRetainCycleInClosure() {
+        // 没有循环引用
         var a:Person? = Person()
         let block = {
             print(a?.name)
@@ -141,12 +145,13 @@ class TestViewController: UIViewController {
         }
         person?.block = block
 //        person = nil  // 如果person 不设置成 nil 会有循环引用
-        block()
+//        block()  // 和 block 是否调用没有关系
     }
     
     func testRetainCycleInClosureTwo()  {
         
         //  还是没有测试出现 deint
+        // 没有循环引用
         let block = {
             print("block")
             print(self.view.frame)
@@ -162,6 +167,7 @@ class TestViewController: UIViewController {
     // 这个 会引起 循环引用
     func testRetainCycleInClosureThree() {
         let a = Person()
+        // 全局 的 变量
         block = {
             print(self.view.frame)
         }
